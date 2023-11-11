@@ -2,6 +2,7 @@ import userModel from "../../../DB/model/user.model.js";
 import bcrypt from 'bcryptjs';
 import cloudinary from "../../services/cloudinary.js";
 import jwt from 'jsonwebtoken';
+import { sendEmail } from "../../services/email.js";
 
 export const signUp = async (req,res)=>{
     
@@ -18,9 +19,29 @@ export const signUp = async (req,res)=>{
     folder:`${process.env.APP_NAME}/users`
  })
 
+   const token = jwt.sign({email},process.env.CONFIRMEMAILSECRET);
+   await sendEmail(email,"confirm email",`<a href='http://localhost:4000/auth/confirmEmail/${token}'>verify</a>`);
    const createUser = await userModel.create({userName,email,password:hashPassword,image:{secure_url,public_id}});
 
    return res.status(201).json({message:"success",createUser});
+}
+
+export const confirmEmail = async (req,res)=>{
+
+   const token = req.params.token;
+   const decoded = jwt.verify(token,process.env.CONFIRMEMAILSECRET);
+   if(!decoded){
+      return res.status(404).json({message:"invalid token"});
+   }
+
+   const user = userModel.findOneAndUpdate({email:decoded.email,confirmEmail:false},
+      {confirmEmail:true});
+
+      if(!user){
+         return res.status(400).json({message:"invalid verifiy your email or your email is not verified"});
+      }
+
+   return res.status(200).json({message:"your email is verified ",});
 }
 
 export const signIn = async (req,res)=>{
