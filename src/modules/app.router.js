@@ -4,6 +4,7 @@ import productsRouter from './products/products.router.js';
 import subcategoryRouter from './subcategory/subcategory.router.js'
 import authRouter from './auth/auth.router.js'
 import couponRouter from './coupon/coupon.router.js'
+import cartRouter from './cart/cart.router.js'
 import { sendEmail } from '../services/email.js';
 
 const initApp = (app,express)=>{
@@ -17,6 +18,7 @@ const initApp = (app,express)=>{
     app.use('/products',productsRouter);
     app.use('/subcategory',subcategoryRouter)
     app.use('/coupon',couponRouter);
+    app.use('/cart',cartRouter);
     app.get('*',(req,res)=>{
         return res.status(500).json({message:"page not found"});
     })

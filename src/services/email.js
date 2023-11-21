@@ -5,8 +5,8 @@ const transporter = nodemailer.createTransport({
    service:'gmail',
   auth: {
     // TODO: replace `user` and `pass` values from <https://forwardemail.net>
-    user: "anasdaqqa3@gmail.com",
-    pass: "wtcd qyfl kgkt ionh",
+    user: process.env.EMAILSENDER,
+    pass: process.env.PASSWORDSENDER,
   },
 });
 
@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
 
   // send mail with defined transport object
   const info = await transporter.sendMail({
-    from: '"Fred Foo 👻" <anasdaqqa3@gmail.com>', // sender address
+    from: `"T-Shop" <${process.env.EMAILSENDER}>`, // sender address
     to, 
     subject,
     html,
