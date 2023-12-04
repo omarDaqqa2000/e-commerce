@@ -2,7 +2,7 @@ import CouponModel from "../../../DB/model/coupon.model.js";
 
 export const createCoupon = async (req,res)=>{
    
-    const {name,amount} = req.body;
+    const {name} = req.body;
     
 
     if(await CouponModel.findOne({name})){
